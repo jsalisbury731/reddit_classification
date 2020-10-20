@@ -1,3 +1,5 @@
+# Imports
+
 import pandas as pd
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.pipeline import Pipeline
@@ -10,7 +12,8 @@ import requests
 ################################
 
 # This function scrapes at least min_posts from Reddit not including [removed]
-# and [deleted] posts, and contingent on whether a post is_self or not
+# and [deleted] posts, and is contingent on whether a post is_self or not
+
 def scrape_reddit(subreddit, min_posts, is_self):
 
     url = 'https://api.pushshift.io/reddit/search/submission'
@@ -80,17 +83,23 @@ def scrape_reddit(subreddit, min_posts, is_self):
         except:
             print('Other error.')
 
-#        time.sleep(3)
+        time.sleep(3)
         print(len(df))
     df.reset_index(inplace=True)
     return df
 
 ################################
 
+# This function collects all the parameters for the Vectorizer through user prompts
+
+# Load the NLTK English stopwords into a variable
 nltk_stopwords = stopwords.words('english')
 
 def get_params():
-
+    
+    # Takes input to determine which Vectorizer to use
+    # Validates that the input is either a 1 or 2 and try/except in case a string is entered
+    # Sets vect_input to the chosen Vectorizer so it can be instantiated
     vect_input = False
     while vect_input != 1 and vect_input != 2:
         try:
@@ -105,6 +114,10 @@ def get_params():
     elif vect_input == 2:
         vect_input = TfidfVectorizer()
 
+    # Takes input to determine which stopwords to test
+    # Checks that the input values are all in the stopwords_list
+    # Converts input values into integers and then sorts the list
+    # Sets stopwords_input to a list of the specific stopwords to test
     stopwords_input = '0'
     stopwords_list = ['1', '2', '3']
     # https://www.techbeamers.com/program-python-list-contains-elements/
@@ -132,6 +145,10 @@ def get_params():
     else:
         print('Error.')
 
+    # Asks for user input for max features to test
+    # Splits the input by spaces and makes sure each value is an integer
+    # Tests for any values entered being strings
+    # Checks that the number of values (after splits) equals the number of integers 
     max_features_run = False
     int_count = 0
     while max_features_run == False:
@@ -149,6 +166,10 @@ def get_params():
     # https://www.geeksforgeeks.org/python-converting-all-strings-in-list-to-integers/
     max_features_input = [int(i) for i in max_features_input.split()]
 
+    # Asks for user input for min documents to test
+    # Splits the input by spaces and makes sure each value is an integer
+    # Tests for any values entered being strings
+    # Checks that the number of values (after splits) equals the number of integers 
     min_df_run = False
     int_count = 0
     while min_df_run == False:
@@ -165,6 +186,10 @@ def get_params():
             min_df_run = True
     min_df_input = [int(i) for i in min_df_input.split()]
 
+    # Asks for user input for max documents to test (requested as a percentage)
+    # Splits the input by spaces and makes sure each value is a float
+    # Tests for any values entered being strings
+    # Checks that the number of values (after splits) equals the number of floats 
     max_df_run = False
     float_count = 0
     while max_df_run == False:
@@ -181,6 +206,11 @@ def get_params():
                 max_df_run = True
     max_df_input = [float(i) for i in max_df_input.split()]
 
+    # Asks for user input for n-grams to test
+    # Tests that input is equal to 1, 2, or 3
+    # Checks for a ValueError in case a string is entered
+    # Sets ngrams_input to designated n-grams
+    # This input method won't work with (2,2), (2, 3), etc.
     ngrams_input = False
     while ngrams_input != 1 and ngrams_input != 2 and ngrams_input != 3:
         try:
@@ -199,6 +229,9 @@ def get_params():
     else:
         print('Error.')
 
+    # Asks for user input for how many folds to cross validate with
+    # Converst and checks for integer
+    # Excepts for ValueError caused by a string input
     cv_fold_input = False
     while type(cv_fold_input) != int:
         try:
@@ -206,6 +239,7 @@ def get_params():
         except ValueError:
             print('\nPlease try again and enter a number.\n')
 
+    # Set up params_dict to return from function
     params_dict = {'vect_input': vect_input,
                   'stopwords_input': stopwords_input,
                   'max_features_input': max_features_input,
@@ -217,6 +251,11 @@ def get_params():
     return params_dict
 
 ################################
+
+# This function creates the pipeline with the actual Vectorizer and MultinomialNB model
+# Will have to update once I implement the Random Forests model
+# Takes the param_dict, X_train and y_train, and additional stopwords as the parameters
+# NOTE: This pipeline was coded to use 6 cores based on my laptop
 
 def run_model(params_dict, X_train, y_train, add_stopwords=[None]):
 
@@ -242,5 +281,5 @@ def run_model(params_dict, X_train, y_train, add_stopwords=[None]):
     print(f'Best parameters: {gs.best_params_}')
     print(f'Best score: {gs.best_score_}')
 
-#     Return statement to be able to pickle model
-#     return gs
+    # Return the model for post processing outside of the function
+    return gs
