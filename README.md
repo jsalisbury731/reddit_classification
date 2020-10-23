@@ -37,8 +37,8 @@ ___
 |**subreddit**|*object*|Pushshift API|Name of the subreddit that the post was pulled from|
 |**sub_target**|*int*||Subreddit converted into binary for modeling|
 |**combined**|*object*||Concatenated value from title and selftext|
-|**char_count**|*int*||Total number of characters in the combined tex|
-|**word_count**|*int*||Total number of words in the combined tex|
+|**char_count**|*int*||Total number of characters in the combined text|
+|**word_count**|*int*||Total number of words in the combined text|
 |**tokens**|*object*||Tokenized text from combined text|
 |**stemmed**|*object*||Stemmed text from the tokenized text|
 |**stock_sentiment**|*float*||Sentiment score based on stock/investment specific terminology|
@@ -68,7 +68,7 @@ ___
 <div align="center"><img src="./assets/images/char_count.png" width="75%" height="75%"></div>  
 <div align="center"><img src="./assets/images/word_count.png" width="75%" height="75%"></div>
 
-- Both the character count and word count plots showed relatively the same thing. There was a significantly higher frequency of r/WallStreetBets than r/Investing posts in the first two bins. However, in the third and higher bins, r/Investing posts were noticably longer than the r/WallStreetBets posts. This correlates with the idea that r/WallStreetBets posts are possibly more speculative and less researched, with less facts and information to back them up than r/Investing posts.
+- Both the character count and word count plots showed relatively the same thing. There was a significantly higher frequency of r/WallStreetBets than r/Investing posts in the first two bins. However, in the third and higher bins, r/Investing posts were noticeably longer than the r/WallStreetBets posts. This correlates with the idea that r/WallStreetBets posts are possibly more speculative and less researched, with less facts and information to back them up than r/Investing posts.
   
 - As part of my EDA, I also looked at the most common words and bigrams. Before doing this, however, I removed stopwords to see what the remaining text consisted of. The majority of the unigrams and bigrams involved either internet protocol terminology or actual investment terms.
 
@@ -89,7 +89,7 @@ ___
 ___
 ### [Pipeline Modeling](https://git.generalassemb.ly/jsalisbury731/project_3/blob/master/code/03_pipeline_modeling.ipynb)
 
-After reading in my data and dropping any unecessary columns, I set my X feature and y target and performed a train-test-split of the data for validation purposes. My baseline accuracy showed a majority of posts being from r/WallStreetBets with 50.41% of posts and r/Investing compromising 49.59% of posts. This meant that my model would need to classify posts better than 50.41% accuracy to improve over the baseline model.
+After reading in my data and dropping any unnecessary columns, I set my X feature and y target and performed a train-test-split of the data for validation purposes. My baseline accuracy showed a majority of posts being from r/WallStreetBets with 50.41% of posts and r/Investing compromising 49.59% of posts. This meant that my model would need to classify posts better than 50.41% accuracy to improve over the baseline model.
 
 #### Multinomial Naive Bayes
 
@@ -99,7 +99,7 @@ The first model which I implemented was a Multinomial Naive Bayes model. I expec
 
 #### Random Forests
 
-The second model which I tested was a Random Forests model. Again, I performed multiple grid searches and determined my best Rnadom Forests model resulted from using the TfidfVectorizer and specifically tuned parameters. I incorporated three additional parameters into this pipeline that were specific to the Random Forests model. My accuracy score came out to be 0.865 and my sensitivity score ended up being 0.821. This was a small decrease in sensitivity compared to my Naive Bayes model.
+The second model which I tested was a Random Forests model. Again, I performed multiple grid searches and determined my best Random Forests model resulted from using the TfidfVectorizer and specifically tuned parameters. I incorporated three additional parameters into this pipeline that were specific to the Random Forests model. My accuracy score came out to be 0.865 and my sensitivity score ended up being 0.821. This was a small decrease in sensitivity compared to my Naive Bayes model.
 
 <div align="center"><img src="./assets/images/rf_confusion_matrix.png" width="50%" height="50%"></div>
 
@@ -112,18 +112,18 @@ The last model I evaluated was a Logistic Regression model. I ended up using the
 ___
 ### Conclusions and Recommendations
 
-After initially pulling the necessary data for this project, the exploratory data analysis uncovered some interesting highlights. The presence of outliers was surprisingly dominated by r/WallStreetBets posts and most of the top posts were authored by a select few Redditors. After plotting the most commonly occuring unigrams and bigrams, it was clear that some of these words should be considered for removal from the analysis.
+After initially pulling the necessary data for this project, the exploratory data analysis uncovered some interesting highlights. The presence of outliers was surprisingly dominated by r/WallStreetBets posts and most of the top posts were authored by a select few Redditors. After plotting the most commonly occurring unigrams and bigrams, it was clear that some of these words should be considered for removal from the analysis.
 
 This led to the models. I selected sensitivity as my primary metric to optimize for due to the preference of falsely classifying an r/Investment rather than falsely classifying an r/WallStreetBets post. I opted for this choice because I thought it was more important to let some "safer", less speculative investment tips slip through the cracks than shoot for a higher accuracy and classify riskier tips as safe. Again, this is all based on the assumption that the data between the two subreddits is largely distinguishable, which is a necessary assumption based on the anonymity and unregulated nature of Reddit.
 
 My recommendation based on optimizing sensitivity for this task is to use the Logistic Regression model. With The Naive Bayes model performing relatively well in comparison to the Logistic Regression model, the sensitivity of the LR model was more than two percentage points higher than the NB model. Considering LR is a discriminative model (as compared to NB being a generative model), this is advantageous since my primary concern to satisfy this problem statement is being able to identify the boundary and separate the data into two classes. I am less concerned with identifying the hidden parameters and understanding the underlying distribution of data, which is more common with generative models. LR also works better with collinearity than NB, and considering textual data is often not colinear (since certain words are commonly adjacent or work together), the Logistic Regression model seems more suitable.
 
-With further development, using this model a person could theoretically import an investment tip or strategy into it and the model would be able to identify whether the strategy/message more closely aligned with a safer investment strategy that would be found in r/Investing as compared to a riskier, less researched post that would be found in r/WallStreetBets. That is not to say any investment strategy should be acted upon without doing due diligience, but it is a start to have an understanding of whether a tip is closely aligned with a 'bet' or an actual safe 'investment'.
+With further development, using this model a person could theoretically import an investment tip or strategy into it and the model would be able to identify whether the strategy/message more closely aligned with a safer investment strategy that would be found in r/Investing as compared to a riskier, less researched post that would be found in r/WallStreetBets. That is not to say any investment strategy should be acted upon without doing due diligence, but it is a start to have an understanding of whether a tip is closely aligned with a 'bet' or an actual safe 'investment'.
 ___
 
 ### What Next
 
 Things I would like to look into as the project continues:
-- Investigate the sentiment analysis and the reasoning behind the discrepancy in the VADER analysis with the similarity in the investment term analyis.
+- Investigate the sentiment analysis and the reasoning behind the discrepancy in the VADER analysis with the similarity in the investment term analysis.
 - Incorporate posts' comments and evaluate for their sentiments to try to establish whether the posts' contents from each subreddit are looked upon favorably or not. This would provide further insight into the general consensus and whether other users considered posts risky or even unfounded.
-- Further build out the investment term lexicon to include bigrams and perform a more indepth investment sentiment analysis on the posts.
+- Further build out the investment term lexicon to include bigrams and perform a more in-depth investment sentiment analysis on the posts.
