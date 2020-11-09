@@ -47,7 +47,7 @@ ___
 |**compound_sent_sign**|*object*||compound_sent converted into "positive", 'neutral', and "negative"|
 
 ___
-### [Data Pulling](https://git.generalassemb.ly/jsalisbury731/project_3/blob/master/code/01_reddit_scraper.ipynb)
+### [Data Pulling](https://github.com/jsalisbury731/reddit_classification/blob/master/code/01_reddit_scraper.ipynb)
 
 The first step of this project was to collect the data required for a balanced study. In order to do this, I utilized the Pushshift.io API which is a 3rd party API similar to Reddit's official API. Using the Pushshift API, I created a function to enable me to pull posts with relative ease and efficiency. The function accepted three parameters for its collecting - the subreddit name to pull from, the minimum number of posts to pull, and whether or not to only pull self posts.
 
@@ -56,7 +56,7 @@ While the subreddit name is straightforward, pulling the correct number of posts
 For both subreddits, I ended up pulling a minimum of 10,000 posts that were all self posts.
 
 ___
-### [Data Discovery](https://git.generalassemb.ly/jsalisbury731/project_3/blob/master/code/02_eda.ipynb)
+### [Data Discovery](https://github.com/jsalisbury731/reddit_classification/blob/master/code/02_eda.ipynb)
 
 - My initial dive into the data began by pulling in the two sets of posts, joining them, and mapping the subreddits to 0s and 1s to use as my target. In doing so, I assigned r/WallStreetBets to 1 and r/Investing to 0.
 - Next, I combined the titles and selftext of the posts to create one single string. I calculated the character counts for each post and word counts, using the combined strings as my data.
@@ -87,7 +87,7 @@ ___
 - After exploring the data, I expect to be able to answer my problem statement with the provided data. The only question is how sensitive and accurate my model will be to distinguishing the messaging.
 
 ___
-### [Pipeline Modeling](https://git.generalassemb.ly/jsalisbury731/project_3/blob/master/code/03_pipeline_modeling.ipynb)
+### [Pipeline Modeling](https://github.com/jsalisbury731/reddit_classification/blob/master/code/03_pipeline_modeling.ipynb)
 
 After reading in my data and dropping any unnecessary columns, I set my X feature and y target and performed a train-test-split of the data for validation purposes. My baseline accuracy showed a majority of posts being from r/WallStreetBets with 50.41% of posts and r/Investing compromising 49.59% of posts. This meant that my model would need to classify posts better than 50.41% accuracy to improve over the baseline model.
 
